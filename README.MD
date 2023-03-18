@@ -1,5 +1,9 @@
 # Refine Dashboard Base Template for Strapi V4
 
+<p align="center">
+  <img src="https://cdn-icons-png.flaticon.com/512/7910/7910629.png" alt="Dashboard"/>
+</p>
+
 ## Version:
 
 1.0.0
