@@ -1,9 +1,18 @@
 import React from "react";
 
-import { useLogin } from "@pankod/refine-core";
-import { Grid, Button, TextField, Box, Card } from "@pankod/refine-mui";
+import { useRegister, useLogin } from "@pankod/refine-core";
+import {
+  Grid,
+  Button,
+  TextField,
+  Box,
+  Card,
+  Divider,
+} from "@pankod/refine-mui";
+import { toast } from "react-toastify";
 
-export default function Login() {
+export default function Register() {
+  const { mutate: register } = useRegister();
   const { mutate: login } = useLogin();
 
   const windowUrl = window.location.search;
@@ -11,10 +20,33 @@ export default function Login() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    login({
-      username: e.target.username.value,
-      password: e.target.password.value,
-    });
+    register(
+      {
+        username: e.target.username.value,
+        email: e.target.email.value,
+        password: e.target.password.value,
+      },
+      {
+        onSuccess: () => {
+          toast.success("User created successfully!");
+          login(
+            {
+              email: e.target.email.value,
+              password: e.target.password.value,
+            },
+            {
+              onSuccess: () => {
+                // go to the page the user was trying to access before being redirected to the login page
+                const to = params.get("to");
+                if (to) {
+                  window.location = to;
+                }
+              },
+            }
+          );
+        },
+      }
+    );
   };
 
   return (
@@ -46,33 +78,43 @@ export default function Login() {
                 />
               </Grid>
               <Grid item container justifyContent="center">
-                <h1 level={3}>Dashboard Login</h1>
+                <h1 level={3}>Dashboard Register</h1>
               </Grid>
             </Grid>
             <Box
               component="form"
               onSubmit={handleSubmit}
-              sx={{ display: "flex", flexDirection: "column" }}
+              sx={{ display: "flex", flexDirection: "column", gap: 2 }}
               autoComplete="off"
             >
               <TextField
                 name="username"
+                label="Nome"
+                rules={[{ required: true }]}
+                placeholder="Nome"
+                required
+                defaultValue={params.get("username")}
+              />
+              <Divider sx={{ my: 1 }} />
+              <TextField
+                name="email"
                 label="Email"
                 rules={[{ required: true }]}
                 placeholder="Email"
                 required
-                autoFocus
-                sx={{ mb: 2 }}
-              ></TextField>
+                defaultValue={params.get("email")}
+              />
               <TextField
                 name="password"
                 label="Password"
                 rules={[{ required: true }]}
-                style={{ marginBottom: "12px" }}
-                type="password"
-                placeholder="●●●●●●●●"
+                placeholder="Password"
                 required
-              ></TextField>
+                defaultValue={params.get("password")}
+              />
+              <Button type="submit" variant="contained">
+                Register
+              </Button>
               <div style={{ marginBottom: "12px" }}>
                 <a
                   style={{
@@ -81,22 +123,13 @@ export default function Login() {
                     color: "#00bcd4",
                   }}
                   href={
-                    "/register" +
+                    "/login" +
                     (params.get("to") ? "?to=" + params.get("to") : "")
                   }
                 >
-                  Don't have an account? Register
+                  Already have an account? Login
                 </a>
               </div>
-              <Button
-                variant="contained"
-                color="primary"
-                size="large"
-                type="submit"
-                fullWidth
-              >
-                Login
-              </Button>
             </Box>
           </Card>
         </Grid>

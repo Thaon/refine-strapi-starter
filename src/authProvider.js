@@ -7,16 +7,29 @@ import axios from "utils/axios";
 const strapiAuthHelper = AuthHelper(API_URL + "/api");
 
 export const authProvider = {
+  register: async ({ username, email, password }) => {
+    const { data, status } = await axios.post("/api/auth/local/register", {
+      username,
+      email,
+      password,
+    });
+    if (status === 200) {
+      localStorage.setItem(TOKEN_KEY, data.jwt);
+      localStorage.setItem("user", JSON.stringify(data.user));
+      // set header axios instance
+      axios.defaults.headers.common.Authorization = `Bearer ${data.jwt}`;
+      return Promise.resolve();
+    }
+    return Promise.reject();
+  },
   login: async ({ username, password }) => {
     const { data, status } = await strapiAuthHelper.login(username, password);
     if (status === 200) {
       localStorage.setItem(TOKEN_KEY, data.jwt);
-
       // set header axios instance
       axios.defaults.headers.common = {
         Authorization: `Bearer ${data.jwt}`,
       };
-
       return Promise.resolve();
     }
     return Promise.reject();
