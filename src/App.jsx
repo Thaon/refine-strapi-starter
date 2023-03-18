@@ -31,9 +31,6 @@ import Dashboard from "pages/Dashboard";
 import Settings from "pages/Settings";
 
 // resources
-import ExList from "pages/example/List";
-import ExCreate from "pages/example/Create";
-import ExEdit from "pages/example/Edit";
 
 // Icons
 
@@ -83,23 +80,18 @@ const App = () => {
                 },
               ],
             }}
-            resources={[
-              // {
-              //   name: "",
-              //   icon: <Icon />,
-              //   options: { label: "Label" },
-              //   list: List,
-              //   create: Create,
-              //   edit: Edit,
-              // },
-              {
-                name: "example",
-                options: { label: "Example" },
-                list: ExList,
-                create: ExCreate,
-                edit: ExEdit,
-              },
-            ]}
+            resources={
+              [
+                // {
+                //   name: "",
+                //   icon: <Icon />,
+                //   options: { label: "Label" },
+                //   list: List,
+                //   create: Create,
+                //   edit: Edit,
+                // },
+              ]
+            }
             authProvider={authProvider}
             dataProvider={DataProvider(API_URL + "/api", axios)}
             notificationProvider={notificationProvider}
